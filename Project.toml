@@ -1,0 +1,9 @@
+name = "FIT"
+uuid = "048937d8-90ca-46f0-ae7f-e028d7cfd3e9"
+authors = ["Robert Zietal <robert.zietal@roames.com.au>"]
+version = "0.1.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+TypedTables = "9d95f2ec-7b3d-5a63-8d20-e2491e220bb9"
