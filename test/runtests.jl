@@ -4,6 +4,7 @@ using FIT
 
 @testset "Parse example file" begin
 
-    data = fit2table("example.fit")
+    @show data = fit2table("example.fit")
 
+    @test 1 == 1
 end

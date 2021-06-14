@@ -20,6 +20,12 @@ function (d::FitCSVTool)(filename::AbstractString; exec::AbstractString="java -j
         return nothing
     end
 
+    try
+        run(`java -version`)
+    catch e
+        @error "Execution of java -version failed with error $(e). Make sure you have java installed to use this module."
+    end
+
     temp_dir = mktempdir(dirname(@__DIR__))
     tmp_path = joinpath(temp_dir, basename(filename))
     cp(filename, tmp_path; force=true)
@@ -52,10 +58,9 @@ function fit2table(filename::AbstractString)::FlexTable
     i = 1
     for name in names
         value = getproperty(csv_object, name)
-        @show type = types[i]
-
-        if type !== Missing
-            setproperty!(data, name, value)
+        if types[i] !== Missing
+            new_name = Symbol(replace(string(name), "record."=>""))
+            setproperty!(data, new_name, value)
         end
         i = i + 1
     end
