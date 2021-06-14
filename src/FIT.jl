@@ -24,23 +24,15 @@ function (d::FitCSVTool)(filename::AbstractString; exec::AbstractString="java -j
     tmp_path = joinpath(temp_dir, basename(filename))
     cp(filename, tmp_path; force=true)
 
+    arguments = [split(exec)...]
+    arguments = vcat(arguments, d.command)
+    arguments = vcat(arguments, [split(options)...])
+    arguments = vcat(arguments, tmp_path)
+    command = Cmd(String.(arguments))
 
-    @show readdir(temp_dir)
-    
-    @show isfile(tmp_path)
-    @show isfile(d.command)
-    arguments = [exec, d.command, options, tmp_path]
-    @show command = Cmd(arguments)
-
-
-    @show command = `java -jar $(d.command) --defn none --data record $(tmp_path)`
-
-
-    #@show command = `java -jar /home/rzietal/git/FIT.jl/FitSDK/java/FitCSVTool.jar --defn none --data record /home/rzietal/git/FIT.jl/test/example.fit`
     run(command)
     
-    @show csvfilename = splitext(filename)[1] * "_data.csv"
-    @show isfile(csvfilename)
+    csvfilename = splitext(tmp_path)[1] * "_data.csv"
     csv_object = CSV.File(csvfilename)
 
     return csv_object
@@ -51,7 +43,9 @@ function fit2table(filename::AbstractString)::FlexTable
     fit2csv = FitCSVTool()
     @show csv_object = fit2csv(filename)
 
-    data = FlexTable(id = collect(1:length(csv_object)))
+    @show csv_object.types
+    @show csv_object.names
+    @show data = FlexTable(id = collect(1:length(csv_object)))
 
     return data
 
