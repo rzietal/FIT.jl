@@ -41,12 +41,25 @@ end
 function fit2table(filename::AbstractString)::FlexTable
 
     fit2csv = FitCSVTool()
-    @show csv_object = fit2csv(filename)
+    
+    csv_object = fit2csv(filename)
 
-    @show csv_object.types
-    @show csv_object.names
-    @show data = FlexTable(id = collect(1:length(csv_object)))
+    types = csv_object.types
+    names = csv_object.names
 
+    data = FlexTable(id = collect(1:length(csv_object)))
+
+    i = 1
+    for name in names
+        value = getproperty(csv_object, name)
+        @show type = types[i]
+
+        if type !== Missing
+            setproperty!(data, name, value)
+        end
+        i = i + 1
+    end
+ 
     return data
 
 end
